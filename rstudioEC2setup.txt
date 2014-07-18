@@ -1,0 +1,108 @@
+
+## This next assumes that you are using an ubuntu based image
+ssh -v -i <your.pem> -l ubuntu <IP address/DNS hostname of ec2 instance>
+
+## The following script mostly comes from Ian Pylvainen @ RStudio
+
+### Add one user by hand:
+
+# add the user 
+sudo adduser --force-badname --gecos santiago --disabled-login --disabled-password santiago
+sudo passwd santiago
+
+##sudo usermod -a --groups rstudio_users santiago
+
+# common revision control setup
+##sudo /ubuntu/rstudio/admin/rcs_config santiago
+
+# create user-specific TeX font cache
+# see: http://people.debian.org/~preining/TeX/TeX-on-Debian/ch2.html
+
+sudo mkdir -p /home/santiago/.texmf-var
+
+# create R user library directory
+sudo mkdir -p /home/santiago/R/library
+
+# alias public to shared
+##sudo ln -fsT /home/santiago/Public /shared/santiago
+
+# file ownership
+sudo chown -R santiago /home/santiago
+sudo chgrp -R santiago /home/santiago
+sudo chmod 0755 /home/santiago
+
+# custom quota for /home
+##sudo xfs_quota -xc "limit bsoft=$S_QUOTA bhard=$H_QUOTA santiago"
+
+# 10GB limit for /
+##sudo setquota -u $1 -F vfsv0 0 10000000 0 0 /
+
+## If on a micro instance create a swap image to avoid the 
+## package download but not install problem
+## http://stackoverflow.com/questions/21837036/install-packages-r-on-ubuntu-12-04-downloads-but-does-not-install-packages#comment33053086_21837036
+
+sudo fallocate -l 2G /swap.img
+sudo mkswap /swap.img
+sudo swapon /swap.img
+
+
+##### Ingredients for a script
+# add the user
+sudo adduser --force-badname --gecos $1 --disabled-login --disabled-password $1
+sudo usermod -a --groups rstudio_users $1
+
+
+
+# common revision control setup
+
+
+sudo /ubuntu/rstudio/admin/rcs_config $1
+
+
+
+# create user-specific TeX font cache
+# see: http://people.debian.org/~preining/TeX/TeX-on-Debian/ch2.html
+
+
+sudo mkdir -p /home/$1/.texmf-var
+
+
+
+# create R user library directory
+sudo mkdir -p /home/$1/R/library
+
+
+
+# alias public to shared
+
+
+sudo ln -fsT /home/$1/Public /shared/$1
+
+
+
+# file ownership
+
+
+sudo chown -R $1 /home/$1
+sudo chgrp -R $1 /home/$1
+
+
+sudo chmod 0755 /home/$1
+
+
+
+# custom quota for /home
+
+
+sudo xfs_quota -xc "limit bsoft=$S_QUOTA bhard=$H_QUOTA $1"
+
+
+
+# 10GB limit for /
+sudo setquota -u $1 -F vfsv0 0 10000000 0 0 /
+
+
+
+
+
+

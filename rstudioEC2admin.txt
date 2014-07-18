@@ -1,0 +1,6 @@
+
+## One way to install R packages:
+download.packages("xtable",destdir=".")
+getwd()
+## Then at the command line
+R CMD INSTALL xtable_1.7-3.tar.gz
